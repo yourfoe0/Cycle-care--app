@@ -1,1 +1,1340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Us — Cycle Care</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
 
+  :root{
+    --cream: #FAF6F1;
+    --card: #FFFFFF;
+    --ink: #2A1F26;
+    --ink-soft: #6B5C64;
+    --line: #E4D9CE;
+
+    --menstrual: #7A2E3E;
+    --menstrual-tint: #F3E2E4;
+    --follicular: #5E7A52;
+    --follicular-tint: #E9EFE2;
+    --ovulatory: #C98A3E;
+    --ovulatory-tint: #F6E8D3;
+    --luteal: #5F4C6B;
+    --luteal-tint: #EAE2ED;
+    --us: #A8663E;
+    --us-tint: #F3E5D8;
+
+    --lime: #6E8F2E;
+    --lime-dark: #56701F;
+    --lime-tint: #EAF1D9;
+    --lemon: #C99A1E;
+    --lemon-dark: #A67D16;
+    --lemon-tint: #FBF1D4;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
+  html,body{ height:100%; }
+
+  body{
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.5;
+    padding-bottom: 84px;
+  }
+
+  .app{ max-width: 520px; margin: 0 auto; }
+
+  header.top{
+    padding: 22px 20px 16px;
+    display:flex; align-items:baseline; justify-content:space-between;
+  }
+  header.top .brand{
+    font-family:'Fraunces', serif; font-weight:500; font-size: 20px;
+  }
+  header.top .brand span{ color: var(--us); }
+  header.top .date{ font-size: 12.5px; color: var(--ink-soft); }
+
+  .view{ display:none; padding: 4px 20px 20px; animation: fadeIn .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fadeIn{ from{ opacity:0; transform: translateY(4px);} to{opacity:1; transform:none;} }
+
+  h1.page-title{
+    font-family:'Fraunces', serif; font-weight:500; font-size: 24px; margin-bottom: 4px;
+  }
+  .page-sub{ font-size: 14px; color: var(--ink-soft); margin-bottom: 20px; }
+
+  /* CARDS */
+  .card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 2px rgba(42,31,38,.04), 0 10px 24px rgba(42,31,38,.05);
+  }
+
+  .premium-badge{
+    font-size: 10px; font-weight: 600; letter-spacing: .02em;
+    background: linear-gradient(135deg, #E8B923, #C98A3E);
+    color: white; padding: 3px 9px; border-radius: 20px; margin-left: 9px;
+    cursor: pointer;
+  }
+  .premium-badge.locked{
+    background: var(--cream); color: var(--ink-soft); border: 1px solid var(--line);
+  }
+
+  .phase-hero{
+    border-radius: 10px;
+    padding: 24px 20px;
+    margin-bottom: 14px;
+    color: white;
+    box-shadow: 0 12px 28px rgba(42,31,38,.14);
+  }
+  .phase-hero .k{ font-size: 12.5px; opacity: .85; text-transform: none; }
+  .phase-hero .phase-name{ font-family:'Fraunces', serif; font-size: 30px; font-weight: 500; margin: 4px 0 10px; }
+  .phase-hero .phase-desc{ font-size: 14.5px; opacity: .92; max-width: 400px; }
+  .phase-hero.p-menstrual{ background: linear-gradient(135deg, var(--menstrual), #591F2C); }
+  .phase-hero.p-follicular{ background: linear-gradient(135deg, var(--follicular), #46613C); }
+  .phase-hero.p-ovulatory{ background: linear-gradient(135deg, var(--ovulatory), #A96E2A); }
+  .phase-hero.p-luteal{ background: linear-gradient(135deg, var(--luteal), #493B53); }
+  .phase-hero.p-empty{ background: linear-gradient(135deg, #8C7E86, #6B5C64); }
+
+  .stat-row{ display:flex; gap: 12px; margin-top: 14px; }
+  .stat{ flex:1; background: rgba(255,255,255,.14); border-radius: 8px; padding: 10px 12px; }
+  .stat .n{ font-family:'Fraunces', serif; font-size: 18px; }
+  .stat .l{ font-size: 11.5px; opacity: .85; }
+
+  .reliability{ font-size: 13.5px; color: var(--ink-soft); }
+
+  /* BUTTONS */
+  button{ font-family:'Inter', sans-serif; cursor:pointer; border:none; }
+  .btn-primary{
+    background: var(--ink); color:white; padding: 12px 18px; border-radius: 8px;
+    font-size: 14.5px; font-weight:500; width: 100%;
+  }
+  .btn-primary:hover{ opacity:.9; }
+  .btn-secondary{
+    background: transparent; color: var(--ink); border: 1px solid var(--line) !important;
+    padding: 11px 18px; border-radius: 8px; font-size: 14px; width:100%;
+  }
+  .btn-ghost{
+    background:none; color: var(--ink-soft); font-size: 13px; text-decoration: underline;
+    padding: 6px 0;
+  }
+  .btn-row{ display:flex; gap: 10px; margin-top: 10px; }
+
+  /* SYMPTOM CHIPS */
+  .chip-grid{ display:flex; flex-wrap:wrap; gap: 8px; margin: 12px 0 16px; }
+  .chip{
+    padding: 8px 14px; border-radius: 20px; border: 1px solid var(--line);
+    font-size: 13.5px; background: var(--cream); color: var(--ink-soft);
+  }
+  .chip.active{ background: var(--ink); color:white; border-color: var(--ink); }
+
+  input[type="date"], input[type="text"], input[type="email"], input[type="password"], textarea{
+    width:100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font-family:'Inter', sans-serif; font-size: 15px; background: var(--cream); color: var(--ink);
+  }
+  label{ display:block; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
+  .field{ margin-bottom: 14px; }
+
+  /* LOG LIST */
+  .log-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 13px 0; border-top: 1px solid var(--line);
+  }
+  .log-item:first-child{ border-top:none; }
+  .log-item .d{ font-size: 14.5px; font-weight: 500; }
+  .log-item .meta{ font-size: 12.5px; color: var(--ink-soft); margin-top:2px; }
+  .log-item button{ background:none; color: var(--menstrual); font-size: 13px; }
+
+  .empty-state{
+    text-align:center; padding: 30px 16px; color: var(--ink-soft); font-size: 14px;
+  }
+
+  /* US TAB */
+  .share-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 14px 0;
+  }
+  .switch{
+    width: 44px; height: 26px; border-radius: 13px; background: var(--line);
+    position: relative; cursor:pointer; flex-shrink:0;
+  }
+  .switch.on{ background: var(--us); }
+  .switch .knob{
+    width: 20px; height: 20px; border-radius: 50%; background:white;
+    position:absolute; top:3px; left:3px; transition: left .18s ease;
+  }
+  .switch.on .knob{ left: 21px; }
+
+  .checklist-item{
+    display:flex; align-items:center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .checklist-item:first-child{ border-top:none; }
+  .checklist-item .box{
+    width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer;
+  }
+  .checklist-item .box.done{ background: var(--us); border-color: var(--us); color:white; font-size:13px; animation: pop .32s ease; }
+  .checklist-item .txt{ font-size: 14.5px; }
+  .checklist-item .txt.done{ color: var(--ink-soft); text-decoration: line-through; }
+
+  @keyframes pop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.3); } 100%{ transform:scale(1); } }
+  @keyframes noteIn{ from{ opacity:0; transform: translateY(6px) scale(.97); } to{ opacity:1; transform:none; } }
+
+  .note{
+    padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 14px;
+    max-width: 85%; animation: noteIn .25s ease;
+  }
+  .note.mine{ background: var(--us-tint); margin-left:auto; }
+  .note.theirs{ background: var(--card); border:1px solid var(--line); }
+  .note.gesture{ background: linear-gradient(135deg, var(--lemon-tint), var(--lime-tint)); border: 1px solid var(--lime); }
+  .note.gesture .gesture-text{ font-size: 20px; margin-bottom: 2px; }
+  .note .author{ font-size: 11.5px; color: var(--ink-soft); margin-bottom:3px; font-weight:500; }
+  .note .ts{ font-size: 10.5px; color: var(--ink-soft); margin-top: 4px; opacity:.7; }
+
+  .reactions{ display:flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .reaction-btn{
+    background: rgba(255,255,255,.6); border: 1px solid var(--line); border-radius: 12px;
+    padding: 2px 8px; font-size: 12.5px; display:flex; align-items:center; gap:3px;
+    transition: transform .12s ease;
+  }
+  .reaction-btn:active{ transform: scale(1.2); }
+  .reaction-btn .count{ color: var(--ink-soft); font-size: 11px; }
+
+  .gesture-row{ display:flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .gesture-chip{
+    background: var(--cream); border: 1px solid var(--line); border-radius: 20px;
+    padding: 7px 12px; font-size: 13px; display:flex; align-items:center; gap: 5px;
+    transition: transform .12s ease, background .15s ease;
+  }
+  .gesture-chip:active{ transform: scale(.94); background: var(--lime-tint); border-color: var(--lime); }
+
+  .note-compose{ display:flex; gap: 8px; margin-top: 12px; }
+  .note-compose input{ flex:1; }
+  .note-compose button{
+    background: var(--us); color:white; border-radius: 8px; padding: 0 16px; font-size: 14px; font-weight:500;
+  }
+
+  .quick-tips{ display:flex; flex-direction:column; gap:0; }
+  .quick-tips .qt{ padding: 12px 0; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--ink-soft); }
+  .quick-tips .qt:first-child{ border-top:none; }
+  .quick-tips .qt strong{ color: var(--ink); }
+
+  /* LEARN TAB */
+  .phase-ref{
+    border-radius: 8px; padding: 16px 18px; margin-bottom: 10px; border-left: 4px solid;
+  }
+  .phase-ref .name{ font-family:'Fraunces', serif; font-size: 17px; font-weight:500; }
+  .phase-ref .days{ font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
+  .phase-ref .desc{ font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .phase-ref.r-menstrual{ background: var(--menstrual-tint); border-color: var(--menstrual); }
+  .phase-ref.r-follicular{ background: var(--follicular-tint); border-color: var(--follicular); }
+  .phase-ref.r-ovulatory{ background: var(--ovulatory-tint); border-color: var(--ovulatory); }
+  .phase-ref.r-luteal{ background: var(--luteal-tint); border-color: var(--luteal); }
+
+  .avoid-box{ background: var(--menstrual-tint); border-radius: 8px; padding: 16px 18px; margin-top: 16px; }
+  .avoid-box .g-title{ font-family:'Fraunces', serif; font-weight:500; font-size:15px; color: var(--menstrual); margin-bottom: 8px; }
+  .avoid-box li{ font-size: 13.5px; color: var(--ink-soft); padding-left: 14px; position:relative; margin-bottom:6px; }
+  .avoid-box li::before{ content:""; position:absolute; left:0; top:7px; width:5px; height:5px; border-radius:50%; background: var(--menstrual); }
+
+  .citrus-panel{ border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; }
+  .citrus-panel:last-child{ margin-bottom: 0; }
+  .citrus-panel.lime{ background: var(--lime-tint); border-left: 4px solid var(--lime); }
+  .citrus-panel.lemon{ background: var(--lemon-tint); border-left: 4px solid var(--lemon); }
+  .citrus-label{ font-family:'Fraunces', serif; font-weight:500; font-size: 15px; margin-bottom: 8px; }
+  .citrus-panel.lime .citrus-label{ color: var(--lime); }
+  .citrus-panel.lemon .citrus-label{ color: var(--lemon); }
+  .citrus-panel li{ font-size: 13.5px; color: var(--ink-soft); padding-left: 14px; position:relative; margin-bottom: 6px; list-style:none; }
+  .citrus-panel li:last-child{ margin-bottom: 0; }
+  .citrus-panel li::before{ content:""; position:absolute; left:0; top:7px; width:5px; height:5px; border-radius:50%; }
+  .citrus-panel.lime li::before{ background: var(--lime); }
+  .citrus-panel.lemon li::before{ background: var(--lemon); }
+
+  .disclaimer{ font-size: 12px; color: var(--ink-soft); margin-top: 18px; line-height: 1.6; }
+
+  /* NAV */
+  nav.bottom{
+    position: fixed; bottom:0; left:0; right:0;
+    background: var(--card); border-top: 1px solid var(--line);
+    display:flex; max-width: 520px; margin: 0 auto;
+  }
+  nav.bottom button{
+    flex:1; background:none; padding: 12px 4px 10px; display:flex; flex-direction:column;
+    align-items:center; gap: 3px; color: var(--ink-soft); font-size: 11px;
+  }
+  nav.bottom button .dot{ width:6px; height:6px; border-radius:50%; background:transparent; margin-bottom:1px; }
+  nav.bottom button.active{ color: var(--ink); font-weight:600; }
+  nav.bottom button[data-view="today"].active .dot{ background: var(--us); }
+  nav.bottom button[data-view="log"].active .dot{ background: var(--follicular); }
+  nav.bottom button[data-view="trends"].active .dot{ background: var(--lemon); }
+  nav.bottom button[data-view="us"].active .dot{ background: var(--luteal); }
+  nav.bottom button[data-view="learn"].active .dot{ background: var(--lime); }
+
+  .loading{ text-align:center; padding: 40px 20px; color: var(--ink-soft); font-size: 14px; }
+  .name-gate{ padding: 16px 0; }
+  .toast{
+    position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color:white; padding: 10px 18px; border-radius: 20px;
+    font-size: 13px; opacity:0; pointer-events:none; transition: opacity .25s ease;
+    max-width: 90%; text-align:center; z-index: 90;
+  }
+  .toast.show{ opacity:1; }
+
+  .lock-box{
+    text-align:center; padding: 26px 16px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--lemon-tint), var(--lime-tint));
+    border: 1px dashed var(--lime-dark);
+  }
+  .lock-box .lt{ font-size: 14.5px; font-weight: 600; margin-bottom: 5px; }
+  .lock-box .ls{ font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
+
+  .modal-overlay{
+    position: fixed; inset: 0; background: rgba(42,31,38,.55);
+    display: none; align-items: flex-end; justify-content: center; z-index: 60;
+  }
+  .modal-overlay.show{ display: flex; }
+  .modal-card{
+    background: var(--cream); width: 100%; max-width: 520px; border-radius: 20px 20px 0 0;
+    padding: 26px 22px 30px; position: relative; animation: slideUp .25s ease;
+  }
+  @keyframes slideUp{ from{ transform: translateY(24px); opacity:.6; } to{ transform:none; opacity:1; } }
+  .modal-close{ position:absolute; top:16px; right:18px; color: var(--ink-soft); font-size:16px; }
+  .modal-eyebrow{ font-size:12px; color: var(--us); font-weight:600; margin-bottom:4px; }
+  .modal-title{ font-family:'Fraunces', serif; font-size:24px; font-weight:500; margin-bottom:16px; }
+  .modal-features{ display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+  .mf{ font-size:14px; color: var(--ink-soft); }
+  .plan-options{ display:flex; gap:10px; margin-bottom:14px; }
+  .plan-btn{
+    flex:1; background: var(--card); border: 1.5px solid var(--line); border-radius:12px;
+    padding: 16px 12px; text-align:left; position:relative;
+  }
+  .plan-btn.featured{ border-color: var(--us); background: var(--us-tint); }
+  .p-badge{
+    position:absolute; top:-10px; right:10px; background: var(--us); color:white;
+    font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;
+  }
+  .p-name{ font-size:12.5px; color: var(--ink-soft); margin-bottom:4px; }
+  .p-price{ font-family:'Fraunces', serif; font-size:22px; }
+  .p-price span{ font-size:13px; color: var(--ink-soft); font-family:'Inter',sans-serif; }
+  .p-sub{ font-size:11px; color: var(--ink-soft); margin-top:4px; }
+  .modal-fine{ font-size:11px; color: var(--ink-soft); text-align:center; }
+
+  /* AUTH SCREEN */
+  .auth-screen{
+    position: fixed; inset:0; background: var(--cream); z-index: 100;
+    display: flex; align-items:center; justify-content:center; padding: 20px;
+  }
+  .auth-card{
+    background: var(--card); border:1px solid var(--line); border-radius:14px;
+    padding: 30px 24px; width:100%; max-width: 380px;
+    box-shadow: 0 12px 28px rgba(42,31,38,.1);
+  }
+  .auth-brand{ font-family:'Fraunces', serif; font-weight:500; font-size: 26px; margin-bottom:4px; }
+  .auth-brand span{ color: var(--us); }
+  .auth-sub{ font-size:13.5px; color: var(--ink-soft); margin-bottom:22px; }
+  .auth-error{ font-size:13px; margin-bottom:12px; display:none; }
+
+  /* PAIR GATE */
+  .invite-code-box{
+    display:none; text-align:center; margin:16px 0; padding: 14px;
+    background: var(--cream); border: 1px dashed var(--line); border-radius: 10px;
+    font-family:'Fraunces', serif; font-size:26px; letter-spacing:3px; color: var(--us);
+  }
+  .or-divider{ text-align:center; font-size:12px; color: var(--ink-soft); margin:16px 0; }
+</style>
+</head>
+<body>
+
+<div class="app" id="mainApp" style="display:none;">
+  <header class="top">
+    <div style="display:flex; align-items:center;">
+      <div class="brand">cycle<span>care</span></div>
+      <div class="premium-badge locked" id="planBadge" onclick="openUpgrade()">Upgrade</div>
+    </div>
+    <div class="date" id="todayLabel"></div>
+  </header>
+
+  <!-- TODAY -->
+  <div class="view active" id="view-today">
+    <div id="todayContent" class="loading">Loading your data…</div>
+  </div>
+
+  <!-- LOG -->
+  <div class="view" id="view-log">
+    <h1 class="page-title">Cycle log</h1>
+    <p class="page-sub">The more you log, the more reliable the predictions get.</p>
+
+    <div class="card">
+      <div class="field">
+        <label for="newDate">First day of period</label>
+        <input type="date" id="newDate">
+      </div>
+      <div class="field">
+        <label>How did it start? (optional)</label>
+        <div class="chip-grid" id="symptomChips"></div>
+      </div>
+      <button class="btn-primary" onclick="addPeriod()">Log this period</button>
+    </div>
+
+    <div class="card">
+      <div class="page-sub" style="margin-bottom:8px; font-weight:600; color:var(--ink);">History</div>
+      <div id="logList"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="exportData()">Export my data</button>
+    </div>
+    <button class="btn-ghost" onclick="clearData()">Clear all my data</button>
+  </div>
+
+  <!-- US -->
+  <div class="view" id="view-us">
+    <h1 class="page-title">Us</h1>
+    <p class="page-sub">A shared space for you and your partner. Use it to stay in sync, not to overshare.</p>
+
+    <div id="pairGate" class="card name-gate" style="display:none;">
+      <div style="font-weight:600; font-size:15px; margin-bottom:6px;">Connect with your partner</div>
+      <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">Create a code and share it with your partner, or enter the code they gave you.</div>
+      <button class="btn-primary" onclick="createCouple()">Create a new code</button>
+      <div id="inviteCodeDisplay" class="invite-code-box"></div>
+      <div class="or-divider">— or —</div>
+      <div class="field">
+        <label for="joinCodeInput">Enter partner's code</label>
+        <input type="text" id="joinCodeInput" placeholder="e.g. a1b2c3d4">
+      </div>
+      <button class="btn-secondary" onclick="joinCouple()">Join with code</button>
+    </div>
+
+    <div id="usContent" style="display:none;">
+      <div class="card">
+        <div class="share-toggle">
+          <div>
+            <div style="font-weight:600; font-size:14.5px;">Share my status</div>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:2px;">Lets your partner see your current phase & predicted date here.</div>
+          </div>
+          <div class="switch" id="shareSwitch" onclick="toggleShare()"><div class="knob"></div></div>
+        </div>
+      </div>
+
+      <div class="card" id="partnerStatusCard"></div>
+
+      <div class="card">
+        <div style="font-weight:600; font-size:14.5px; margin-bottom:4px;">Support checklist</div>
+        <div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">Either of you can check these off — a shared list, not a chore chart.</div>
+        <div id="checklist"></div>
+        <div class="note-compose" style="margin-top:14px;">
+          <input type="text" id="newChecklistItem" placeholder="Add your own item…">
+          <button onclick="addChecklistItem()">Add</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:600; font-size:14.5px; margin-bottom:4px;">Act & React</div>
+        <div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:14px;">Lime is what to do before she has to ask. Lemon is how to respond in the moment.</div>
+
+        <div class="citrus-panel lime">
+          <div class="citrus-label">Lime — Act</div>
+          <ul>
+            <li>Stock supplies before she runs low.</li>
+            <li>Suggest a low-key plan on predicted heavy days.</li>
+            <li>Send a check-in without being asked.</li>
+            <li>Quietly take a chore off her plate.</li>
+          </ul>
+        </div>
+
+        <div class="citrus-panel lemon">
+          <div class="citrus-label">Lemon — React</div>
+          <ul>
+            <li>If she's in pain: slow down, offer the heating pad, don't over-ask.</li>
+            <li>If she's short with you: don't take it personally — give space, circle back later.</li>
+            <li>If plans get cancelled: accept it gracefully, no guilt trip.</li>
+            <li>If she's low: sit with it, don't rush to fix it.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex; align-items:center; margin-bottom:4px;">
+          <div style="font-weight:600; font-size:14.5px;">Love notes</div>
+          <div class="premium-badge" style="margin-left:8px;">Premium</div>
+        </div>
+        <div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:12px;">Curated messages for exactly how she might be feeling — tap to send instantly.</div>
+        <div class="chip-grid" id="loveCategoryChips"></div>
+        <div id="loveMessageList"></div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:600; font-size:14.5px; margin-bottom:10px;">Notes to each other</div>
+        <div id="notesThread"></div>
+        <div class="gesture-row" id="gestureRow"></div>
+        <div class="note-compose">
+          <input type="text" id="noteInput" placeholder="Leave a note…">
+          <button onclick="postNote()">Send</button>
+        </div>
+      </div>
+
+      <button class="btn-ghost" onclick="signOut()">Sign out</button>
+    </div>
+  </div>
+
+  <!-- LEARN -->
+  <div class="view" id="view-learn">
+    <h1 class="page-title">The four phases</h1>
+    <p class="page-sub">What's actually happening, hormonally, at each point in a typical cycle.</p>
+
+    <div class="phase-ref r-menstrual">
+      <div class="days">Days 1–5</div>
+      <div class="name">Menstrual</div>
+      <div class="desc">The uterine lining sheds. Energy is often lower, cramps and fatigue are common — rest is genuinely useful, not laziness.</div>
+    </div>
+    <div class="phase-ref r-follicular">
+      <div class="days">Days 1–13</div>
+      <div class="name">Follicular</div>
+      <div class="desc">Estrogen rises and energy climbs. A good window for starting new tasks or exercise.</div>
+    </div>
+    <div class="phase-ref r-ovulatory">
+      <div class="days">Around ovulation</div>
+      <div class="name">Ovulatory</div>
+      <div class="desc">An egg is released. Energy and mood are typically at their highest point in the cycle.</div>
+    </div>
+    <div class="phase-ref r-luteal">
+      <div class="days">Days 15–28</div>
+      <div class="name">Luteal</div>
+      <div class="desc">Progesterone rises then drops. PMS symptoms — mood shifts, bloating, cravings, tiredness — tend to show up late in this phase.</div>
+    </div>
+
+    <div class="card" style="margin-top:18px;">
+      <div style="font-weight:600; font-size:14.5px; margin-bottom:10px;">Helping regulate the cycle</div>
+      <div class="quick-tips">
+        <div class="qt"><strong>Consistent sleep</strong> — supports the hormone rhythms that drive the cycle.</div>
+        <div class="qt"><strong>Steady, balanced meals</strong> — enough protein, iron, and healthy fats.</div>
+        <div class="qt"><strong>Moderate, regular movement</strong> — very intense or erratic training can disrupt regularity.</div>
+        <div class="qt"><strong>Managing stress</strong> — chronic stress disrupts cycle-governing hormones.</div>
+        <div class="qt"><strong>Hydration</strong> — can ease bloating and cramping.</div>
+        <div class="qt"><strong>When to see a doctor</strong> — cycles consistently under 21 or over 35 days, missed periods, or disruptive pain are worth a medical opinion.</div>
+      </div>
+    </div>
+
+    <div class="avoid-box">
+      <div class="g-title">Worth avoiding, as a partner</div>
+      <ul>
+        <li>Dismissing pain or saying she's "overreacting."</li>
+        <li>Joking about "being on her period" during disagreements.</li>
+        <li>Pressuring intimacy she's not up for.</li>
+        <li>Complaining about mood changes instead of asking how to help.</li>
+      </ul>
+    </div>
+
+    <p class="disclaimer">This app offers general information, not medical advice. For persistent irregular cycles, missed periods, or severe pain, a doctor or gynecologist can give guidance specific to her.</p>
+  </div>
+
+  <!-- TRENDS -->
+  <div class="view" id="view-trends">
+    <h1 class="page-title">Trends</h1>
+    <p class="page-sub">Patterns across logged cycles — the more you log, the clearer this gets.</p>
+    <div id="trendsContent" class="loading">Log at least two periods to see trends.</div>
+  </div>
+
+</div>
+
+<nav class="bottom" id="bottomNav" style="display:none;">
+  <button class="nav-btn active" data-view="today" onclick="switchView('today')"><div class="dot"></div>Today</button>
+  <button class="nav-btn" data-view="log" onclick="switchView('log')"><div class="dot"></div>Log</button>
+  <button class="nav-btn" data-view="trends" onclick="switchView('trends')"><div class="dot"></div>Trends</button>
+  <button class="nav-btn" data-view="us" onclick="switchView('us')"><div class="dot"></div>Us</button>
+  <button class="nav-btn" data-view="learn" onclick="switchView('learn')"><div class="dot"></div>Learn</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="upgradeOverlay" onclick="if(event.target===this) closeUpgrade()">
+  <div class="modal-card">
+    <div class="modal-close" onclick="closeUpgrade()">✕</div>
+    <div class="modal-eyebrow">Unlock everything</div>
+    <h2 class="modal-title">CycleCare Premium</h2>
+    <div class="modal-features">
+      <div class="mf">✓ Cycle trends & symptom insights</div>
+      <div class="mf">✓ Full Love Notes library</div>
+      <div class="mf">✓ Unlimited shared checklist items</div>
+    </div>
+    <div class="plan-options">
+      <button class="plan-btn" onclick="choosePlan('monthly')">
+        <div class="p-name">Monthly</div>
+        <div class="p-price">$22<span>/mo</span></div>
+      </button>
+      <button class="plan-btn featured" onclick="choosePlan('yearly')">
+        <div class="p-badge">Best value</div>
+        <div class="p-name">Yearly</div>
+        <div class="p-price">$119<span>/yr</span></div>
+        <div class="p-sub">~$9.92/mo · save 55%</div>
+      </button>
+    </div>
+    <div class="modal-fine">Demo only — no payment is processed here. Connect Google Play Billing before a real launch.</div>
+  </div>
+</div>
+
+<div class="auth-screen" id="authScreen">
+  <div class="auth-card">
+    <div class="auth-brand">cycle<span>care</span></div>
+    <div class="auth-sub" id="authSub">Sign in to continue</div>
+    <div class="field">
+      <label for="authEmail">Email</label>
+      <input type="email" id="authEmail" placeholder="you@example.com">
+    </div>
+    <div class="field" id="authNameField" style="display:none;">
+      <label for="authName">Your name</label>
+      <input type="text" id="authName" placeholder="e.g. Sam">
+    </div>
+    <div class="field">
+      <label for="authPassword">Password</label>
+      <input type="password" id="authPassword" placeholder="At least 6 characters">
+    </div>
+    <div id="authError" class="auth-error"></div>
+    <button class="btn-primary" id="authSubmitBtn" onclick="handleAuthSubmit()">Sign in</button>
+    <button class="btn-ghost" style="width:100%; text-align:center; margin-top:14px;" onclick="toggleAuthMode()" id="authToggleBtn">Don't have an account? Sign up</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ================= SUPABASE SETUP ================= */
+const SUPABASE_URL = "https://sogpgvrenrgvxjfmaadd.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_FrsinXMMnebb6d3SfYErZA_1BEQSTp8";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+/* ================= STATE ================= */
+const SYMPTOMS = ["Cramps","Fatigue","Mood shift","Bloating","Headache","Fine"];
+let userId = null;
+let myName = "";
+let shareEnabled = false;
+let coupleId = null;
+let members = [];        // [{id, display_name}] — everyone in this couple
+let periods = [];        // [{id, date:'YYYY-MM-DD', symptoms:[...]}]
+let checklistItems = []; // [{id, label, done, is_custom}]
+let notes = [];          // [{id, author_id, text, is_gesture, reactions, created_at}]
+let plan = "free";       // "free" | "premium" — demo-only client override, real value comes from profiles.plan
+let selectedChips = new Set();
+let authMode = "signin";
+
+const GESTURES = [
+  {emoji:"🤗", label:"Hug"},
+  {emoji:"🌸", label:"Flowers"},
+  {emoji:"💪", label:"You got this"},
+  {emoji:"☕", label:"Bringing coffee"},
+];
+const REACTION_EMOJIS = ["❤️","🤗","😂","👏"];
+
+const LOVE_MESSAGES = {
+  Comfort: [
+    "Take all the time you need today — I've got you.",
+    "No pressure to be anything but okay today.",
+    "Rest. I'll handle the rest.",
+    "You don't have to explain the pain for it to be real to me."
+  ],
+  Encouragement: [
+    "You're handling this so well, even on the hard days.",
+    "Proud of you for taking care of yourself today.",
+    "One day at a time — you're doing great.",
+    "You don't have to push through today if you don't want to."
+  ],
+  Appreciation: [
+    "Grateful for you, especially on days like this.",
+    "You make hard days easier just by being you.",
+    "Thank you for trusting me with this.",
+    "I notice how hard you work, even when it's invisible."
+  ],
+  Playful: [
+    "Ordering your favorite snack as we speak 😉",
+    "Couch, blanket, bad movie — say the word.",
+    "Warning: incoming forehead kisses.",
+    "Craving something specific? I'm already grabbing my keys."
+  ]
+};
+let loveCategory = "Comfort";
+
+const AFFIRMATIONS = {
+  menstrual: [
+    "Rest is productive today.",
+    "Your body is doing real work right now — be gentle with it.",
+    "It's okay to do less today."
+  ],
+  follicular: [
+    "Good day to start something new.",
+    "Energy's on your side today.",
+    "Momentum is building — trust it."
+  ],
+  ovulatory: [
+    "You're likely at your sharpest today — use it well.",
+    "Confidence tends to peak right now — lean into it.",
+    "A good day to speak up, plan, or connect."
+  ],
+  luteal: [
+    "Cravings and moodiness are chemistry, not character.",
+    "Be as kind to yourself as you'd be to a friend right now.",
+    "It's okay if today feels heavier — it's temporary."
+  ]
+};
+
+function todayStr(){ const d=new Date(); d.setHours(0,0,0,0); return d.toISOString().slice(0,10); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=> t.classList.remove('show'), 2200);
+}
+function escapeHtml(s){
+  const d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML;
+}
+
+function openUpgrade(){ document.getElementById('upgradeOverlay').classList.add('show'); }
+function closeUpgrade(){ document.getElementById('upgradeOverlay').classList.remove('show'); }
+
+async function choosePlan(cycle){
+  // Demo-only: local override for this session, not written to the database.
+  // A real purchase needs Google Play Billing + a server-side webhook updating profiles.plan.
+  plan = "premium";
+  closeUpgrade();
+  showToast(cycle === 'yearly' ? "Premium unlocked — $119/yr (demo)" : "Premium unlocked — $22/mo (demo)");
+  renderPlanBadge();
+  renderTrends();
+  renderLoveMessages();
+  renderChecklist();
+}
+
+function renderPlanBadge(){
+  const b = document.getElementById('planBadge');
+  if(!b) return;
+  if(plan === 'premium'){
+    b.textContent = '✦ Premium';
+    b.classList.remove('locked');
+  } else {
+    b.textContent = 'Upgrade';
+    b.classList.add('locked');
+  }
+}
+
+/* ================= AUTH ================= */
+function toggleAuthMode(){
+  authMode = authMode === 'signin' ? 'signup' : 'signin';
+  document.getElementById('authNameField').style.display = authMode === 'signup' ? 'block' : 'none';
+  document.getElementById('authSub').textContent = authMode === 'signup' ? 'Create your account' : 'Sign in to continue';
+  document.getElementById('authSubmitBtn').textContent = authMode === 'signup' ? 'Sign up' : 'Sign in';
+  document.getElementById('authToggleBtn').textContent = authMode === 'signup' ? 'Already have an account? Sign in' : "Don't have an account? Sign up";
+  document.getElementById('authError').style.display = 'none';
+}
+
+async function handleAuthSubmit(){
+  const email = document.getElementById('authEmail').value.trim();
+  const password = document.getElementById('authPassword').value;
+  const errBox = document.getElementById('authError');
+  errBox.style.display = 'none';
+  if(!email || !password){
+    errBox.style.color = 'var(--menstrual)';
+    errBox.textContent = "Enter email and password";
+    errBox.style.display = 'block';
+    return;
+  }
+  try{
+    if(authMode === 'signup'){
+      const name = document.getElementById('authName').value.trim();
+      if(!name){
+        errBox.style.color = 'var(--menstrual)';
+        errBox.textContent = "Enter your name";
+        errBox.style.display = 'block';
+        return;
+      }
+      const { data, error } = await sb.auth.signUp({ email, password, options: { data: { display_name: name } } });
+      if(error) throw error;
+      if(!data.session){
+        errBox.style.color = 'var(--follicular)';
+        errBox.textContent = "Account created. If email confirmation is on, check your inbox, then sign in.";
+        errBox.style.display = 'block';
+        return;
+      }
+    } else {
+      const { error } = await sb.auth.signInWithPassword({ email, password });
+      if(error) throw error;
+    }
+    await onAuthReady();
+  } catch(e){
+    errBox.style.color = 'var(--menstrual)';
+    errBox.textContent = e.message || "Something went wrong";
+    errBox.style.display = 'block';
+  }
+}
+
+async function signOut(){
+  await sb.auth.signOut();
+  location.reload();
+}
+
+function showAuthScreen(){
+  document.getElementById('authScreen').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('bottomNav').style.display = 'none';
+}
+
+async function fetchProfile(){
+  const { data, error } = await sb.from('profiles').select('*').eq('id', userId).maybeSingle();
+  if(error){ console.error(error); return null; }
+  return data;
+}
+
+async function onAuthReady(){
+  const { data: { session } } = await sb.auth.getSession();
+  if(!session){ showAuthScreen(); return; }
+  userId = session.user.id;
+
+  let prof = await fetchProfile();
+  let tries = 0;
+  while(!prof && tries < 6){
+    await new Promise(r => setTimeout(r, 400));
+    prof = await fetchProfile();
+    tries++;
+  }
+  if(!prof){
+    await sb.from('profiles').insert({ id: userId, display_name: session.user.user_metadata?.display_name || '' });
+    prof = await fetchProfile();
+  }
+  if(!prof){
+    showToast("Couldn't load your profile — try reloading");
+    return;
+  }
+
+  myName = prof.display_name || '';
+  shareEnabled = !!prof.share_enabled;
+  plan = prof.plan === 'premium' ? 'premium' : 'free';
+  coupleId = prof.couple_id;
+
+  document.getElementById('authScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('bottomNav').style.display = 'flex';
+
+  document.getElementById('todayLabel').textContent = new Date().toLocaleDateString(undefined,{weekday:'short', month:'short', day:'numeric'});
+  renderSymptomChips();
+  renderPlanBadge();
+
+  await loadPeriods();
+  renderToday();
+  renderLog();
+
+  if(coupleId) await loadMembers();
+  renderUs();
+}
+
+/* ================= PAIRING ================= */
+async function loadMembers(){
+  const { data, error } = await sb.from('profiles').select('id, display_name').eq('couple_id', coupleId);
+  if(error){ console.error(error); members = []; return; }
+  members = data || [];
+}
+function partnerId(){
+  const p = members.find(m => m.id !== userId);
+  return p ? p.id : null;
+}
+function nameFor(id){
+  const m = members.find(x => x.id === id);
+  return m ? (m.display_name || 'Partner') : 'Partner';
+}
+
+async function createCouple(){
+  const { data, error } = await sb.from('couples').insert({}).select().single();
+  if(error){ showToast("Couldn't create a code — try again"); console.error(error); return; }
+  coupleId = data.id;
+  await sb.from('profiles').update({ couple_id: coupleId }).eq('id', userId);
+
+  const defaults = ["Heating pad ready","Snacks stocked","Giving space today","Covering extra chores","Checked in today"];
+  await sb.from('checklist_items').insert(
+    defaults.map(label => ({ couple_id: coupleId, label, is_custom: false, created_by: userId }))
+  );
+
+  const box = document.getElementById('inviteCodeDisplay');
+  box.style.display = 'block';
+  box.textContent = data.invite_code;
+  showToast("Share this code with your partner");
+  await loadMembers();
+}
+
+async function joinCouple(){
+  const code = document.getElementById('joinCodeInput').value.trim().toLowerCase();
+  if(!code){ showToast("Enter a code"); return; }
+  const { data, error } = await sb.from('couples').select('id').eq('invite_code', code).maybeSingle();
+  if(error || !data){ showToast("Code not found"); return; }
+  coupleId = data.id;
+  await sb.from('profiles').update({ couple_id: coupleId }).eq('id', userId);
+  showToast("Connected!");
+  await loadMembers();
+  renderUs();
+}
+
+/* ================= CYCLE MATH ================= */
+function cycleStats(periodsArr){
+  const list = periodsArr || periods;
+  if(list.length === 0) return null;
+  const sorted = [...list].sort((a,b)=> new Date(b.date) - new Date(a.date));
+  const lastStart = new Date(sorted[0].date + 'T00:00:00');
+
+  let avgLen = 28, stdDev = null;
+  if(sorted.length >= 2){
+    const lens = [];
+    for(let i=0; i<sorted.length-1 && i<6; i++){
+      const a = new Date(sorted[i].date+'T00:00:00');
+      const b = new Date(sorted[i+1].date+'T00:00:00');
+      lens.push(Math.round((a-b)/(1000*60*60*24)));
+    }
+    avgLen = Math.round(lens.reduce((s,v)=>s+v,0)/lens.length);
+    const mean = avgLen;
+    stdDev = Math.sqrt(lens.reduce((s,v)=> s+Math.pow(v-mean,2),0)/lens.length);
+  }
+
+  const today = new Date(); today.setHours(0,0,0,0);
+  const diffDays = Math.floor((today-lastStart)/(1000*60*60*24));
+  const dayInCycle = ((diffDays % avgLen)+avgLen)%avgLen + 1;
+  const ovulationDay = Math.max(10, avgLen - 14);
+
+  let phase;
+  if(dayInCycle <= 5) phase = "menstrual";
+  else if(dayInCycle < ovulationDay - 1) phase = "follicular";
+  else if(dayInCycle <= ovulationDay + 1) phase = "ovulatory";
+  else phase = "luteal";
+
+  const daysUntilNext = avgLen - dayInCycle + 1;
+  const nextDate = new Date(today); nextDate.setDate(today.getDate()+daysUntilNext);
+
+  return {
+    phase, dayInCycle, avgLen, stdDev,
+    daysUntilNext, nextDate,
+    dataPoints: sorted.length,
+    lastSymptoms: sorted[0].symptoms || []
+  };
+}
+
+const PHASE_META = {
+  menstrual:{ name:"Menstrual", desc:"The lining is shedding. Lower energy and cramps are common — rest helps." },
+  follicular:{ name:"Follicular", desc:"Estrogen is rising. Energy is usually building back up." },
+  ovulatory:{ name:"Ovulatory", desc:"Around the estimated fertile window. Energy and mood often peak here." },
+  luteal:{ name:"Luteal", desc:"Progesterone rises then falls. PMS symptoms tend to show up late in this phase." },
+};
+
+const PARTNER_TIPS = {
+  menstrual: "A heating pad or a low-key evening would probably land well today.",
+  follicular: "Energy's likely rising — a good day to plan something fun together.",
+  ovulatory: "Often the highest-energy day of the cycle — a good window for plans.",
+  luteal: "PMS can hit hardest here — patience and small comforts go a long way.",
+};
+function getPartnerTip(phase){ return PARTNER_TIPS[phase] || ""; }
+
+/* ================= TODAY VIEW ================= */
+function renderToday(){
+  const el = document.getElementById('todayContent');
+  const stats = cycleStats();
+
+  if(!stats){
+    el.innerHTML = `
+      <div class="phase-hero p-empty">
+        <div class="k">No data yet</div>
+        <div class="phase-name">Let's start</div>
+        <div class="phase-desc">Log the first day of your last period to get a phase estimate and prediction.</div>
+      </div>
+      <button class="btn-primary" onclick="switchView('log')">Log a period</button>
+    `;
+    return;
+  }
+
+  const meta = PHASE_META[stats.phase];
+  const reliability = stats.dataPoints < 2
+    ? `Estimated using a default 28-day cycle — log one more period for a real prediction.`
+    : stats.stdDev !== null && stats.stdDev <= 3
+      ? `Based on ${stats.dataPoints} logged cycles — fairly regular (±${stats.stdDev.toFixed(1)} days).`
+      : `Based on ${stats.dataPoints} logged cycles — varies by about ±${stats.stdDev.toFixed(1)} days. Worth mentioning at a checkup if that continues.`;
+
+  el.innerHTML = `
+    <div class="phase-hero p-${stats.phase}">
+      <div class="k">Day ${stats.dayInCycle} of an est. ${stats.avgLen}-day cycle</div>
+      <div class="phase-name">${meta.name}</div>
+      <div class="phase-desc">${meta.desc}</div>
+      <div class="stat-row">
+        <div class="stat"><div class="n">${stats.daysUntilNext}</div><div class="l">days to next period</div></div>
+        <div class="stat"><div class="n">${stats.nextDate.toLocaleDateString(undefined,{month:'short',day:'numeric'})}</div><div class="l">estimated date</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="reliability">${reliability}</div>
+    </div>
+    <div class="card" id="affirmationCard"></div>
+    <button class="btn-secondary" onclick="switchView('log')">Log today's symptoms</button>
+  `;
+  renderAffirmation(stats.phase);
+}
+
+/* ================= LOG VIEW ================= */
+function renderSymptomChips(){
+  const box = document.getElementById('symptomChips');
+  box.innerHTML = SYMPTOMS.map(s => `<div class="chip" data-s="${s}" onclick="toggleChip('${s}')">${s}</div>`).join('');
+}
+function toggleChip(s){
+  if(selectedChips.has(s)) selectedChips.delete(s); else selectedChips.add(s);
+  document.querySelectorAll('#symptomChips .chip').forEach(c=>{
+    c.classList.toggle('active', selectedChips.has(c.dataset.s));
+  });
+}
+
+async function loadPeriods(){
+  const { data, error } = await sb.from('cycle_logs').select('*').eq('user_id', userId).order('log_date', {ascending:false});
+  if(error){ console.error(error); periods = []; return; }
+  periods = (data || []).map(r => ({ id: r.id, date: r.log_date, symptoms: r.symptoms || [] }));
+}
+
+async function addPeriod(){
+  const dateVal = document.getElementById('newDate').value;
+  if(!dateVal){ showToast("Pick a date first"); return; }
+  const symptoms = Array.from(selectedChips);
+  const { error } = await sb.from('cycle_logs').insert({ user_id: userId, log_date: dateVal, symptoms });
+  selectedChips.clear();
+  document.getElementById('newDate').value = "";
+  renderSymptomChips();
+  if(error){ showToast("Couldn't save — try again"); console.error(error); return; }
+  showToast("Logged");
+  await loadPeriods();
+  renderLog(); renderToday();
+}
+
+async function deletePeriod(id){
+  await sb.from('cycle_logs').delete().eq('id', id);
+  await loadPeriods();
+  renderLog(); renderToday();
+}
+
+function renderLog(){
+  const box = document.getElementById('logList');
+  if(periods.length === 0){
+    box.innerHTML = `<div class="empty-state">No periods logged yet. Add your last one above to get started.</div>`;
+    return;
+  }
+  const sorted = [...periods].sort((a,b)=> new Date(b.date)-new Date(a.date));
+  box.innerHTML = sorted.map(p => {
+    const d = new Date(p.date+'T00:00:00');
+    const label = d.toLocaleDateString(undefined,{month:'long', day:'numeric', year:'numeric'});
+    const sym = p.symptoms && p.symptoms.length ? p.symptoms.join(', ') : 'No symptoms noted';
+    return `<div class="log-item">
+      <div><div class="d">${label}</div><div class="meta">${sym}</div></div>
+      <button onclick="deletePeriod('${p.id}')">Remove</button>
+    </div>`;
+  }).join('');
+}
+
+async function clearData(){
+  if(!confirm("Clear all your logged periods? This can't be undone.")) return;
+  await sb.from('cycle_logs').delete().eq('user_id', userId);
+  await loadPeriods();
+  renderLog(); renderToday();
+  showToast("Cleared");
+}
+
+function exportData(){
+  if(periods.length === 0){ showToast("Nothing to export yet"); return; }
+  const blob = new Blob([JSON.stringify(periods, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'cycle-log.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("Downloaded");
+}
+
+/* ================= TRENDS VIEW ================= */
+function renderTrends(){
+  const box = document.getElementById('trendsContent');
+  if(plan !== 'premium'){
+    box.innerHTML = `<div class="lock-box">
+      <div class="lt">Trends is a Premium feature</div>
+      <div class="ls">See cycle-length charts and symptom patterns once you upgrade.</div>
+      <button class="btn-primary" style="width:auto; padding:10px 22px;" onclick="openUpgrade()">Unlock Premium</button>
+    </div>`;
+    return;
+  }
+  if(periods.length < 2){
+    box.innerHTML = `<div class="empty-state">Log at least two periods to see cycle-length trends.</div>`;
+    return;
+  }
+  const sorted = [...periods].sort((a,b)=> new Date(a.date)-new Date(b.date));
+  const lens = [];
+  for(let i=1;i<sorted.length;i++){
+    const a = new Date(sorted[i-1].date+'T00:00:00');
+    const b = new Date(sorted[i].date+'T00:00:00');
+    lens.push(Math.round((b-a)/(1000*60*60*24)));
+  }
+  const recent = lens.slice(-6);
+  const max = Math.max(...recent, 35);
+  const barW = 36, gap = 14, chartH = 120;
+  const svgW = recent.length*(barW+gap);
+  const bars = recent.map((len,i)=>{
+    const h = Math.max(4, Math.round((len/max)*chartH));
+    const x = i*(barW+gap);
+    const y = chartH-h;
+    const color = (len < 21 || len > 35) ? 'var(--menstrual)' : 'var(--follicular)';
+    return `<rect x="${x}" y="${y}" width="${barW}" height="${h}" rx="4" fill="${color}"></rect>
+      <text x="${x+barW/2}" y="${chartH+16}" font-size="11" fill="var(--ink-soft)" text-anchor="middle">${len}d</text>`;
+  }).join('');
+  const avg = Math.round(recent.reduce((s,v)=>s+v,0)/recent.length);
+
+  const freq = {};
+  periods.forEach(p => (p.symptoms||[]).forEach(s=>{ freq[s]=(freq[s]||0)+1; }));
+  const freqEntries = Object.entries(freq).sort((a,b)=> b[1]-a[1]);
+  const maxFreq = freqEntries.length ? freqEntries[0][1] : 1;
+  const freqHtml = freqEntries.length ? freqEntries.map(([s,c])=>`
+    <div style="margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; font-size:13px; color:var(--ink-soft); margin-bottom:4px;"><span>${s}</span><span>${c}×</span></div>
+      <div style="background:var(--line); border-radius:4px; height:6px;"><div style="width:${(c/maxFreq)*100}%; background:var(--us); height:6px; border-radius:4px;"></div></div>
+    </div>`).join('') : `<div class="empty-state">No symptoms logged yet.</div>`;
+
+  box.innerHTML = `
+    <div class="card">
+      <div style="font-weight:600; font-size:14.5px; margin-bottom:4px;">Average cycle length: ${avg} days</div>
+      <div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:14px;">Last ${recent.length} cycle${recent.length>1?'s':''} logged</div>
+      <svg viewBox="0 0 ${svgW} ${chartH+28}" width="100%" height="${chartH+28}">${bars}</svg>
+    </div>
+    <div class="card">
+      <div style="font-weight:600; font-size:14.5px; margin-bottom:10px;">Most logged symptoms</div>
+      ${freqHtml}
+    </div>
+  `;
+}
+
+/* ================= US VIEW ================= */
+function renderUs(){
+  if(!coupleId){
+    document.getElementById('pairGate').style.display = 'block';
+    document.getElementById('usContent').style.display = 'none';
+    return;
+  }
+  document.getElementById('pairGate').style.display = 'none';
+  document.getElementById('usContent').style.display = 'block';
+
+  document.getElementById('shareSwitch').classList.toggle('on', shareEnabled);
+  loadChecklist().then(renderChecklist);
+  loadNotes().then(renderNotes);
+  renderPartnerStatusCard();
+  renderGestures();
+  renderLoveCategories();
+  renderLoveMessages();
+}
+
+async function toggleShare(){
+  shareEnabled = !shareEnabled;
+  await sb.from('profiles').update({ share_enabled: shareEnabled }).eq('id', userId);
+  document.getElementById('shareSwitch').classList.toggle('on', shareEnabled);
+  showToast(shareEnabled ? "Sharing your status" : "Status hidden");
+  renderPartnerStatusCard();
+}
+
+async function renderPartnerStatusCard(){
+  const box = document.getElementById('partnerStatusCard');
+  if(!box) return;
+  box.innerHTML = `<div style="font-size:13px; color:var(--ink-soft);">Loading shared status…</div>`;
+  const pid = partnerId();
+  if(!pid){
+    box.innerHTML = `<div style="font-size:13.5px; color:var(--ink-soft);">Waiting for your partner to join with the code.</div>`;
+    return;
+  }
+  const { data, error } = await sb.from('cycle_logs').select('*').eq('user_id', pid).order('log_date', {ascending:false});
+  if(error || !data || data.length === 0){
+    box.innerHTML = `<div style="font-size:13.5px; color:var(--ink-soft);">No shared status yet — your partner hasn't turned sharing on, or hasn't logged anything.</div>`;
+    return;
+  }
+  const partnerPeriods = data.map(r => ({ date: r.log_date, symptoms: r.symptoms || [] }));
+  const stats = cycleStats(partnerPeriods);
+  if(!stats){
+    box.innerHTML = `<div style="font-size:13.5px; color:var(--ink-soft);">No shared status yet.</div>`;
+    return;
+  }
+  const meta = PHASE_META[stats.phase];
+  const nextD = stats.nextDate.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  box.innerHTML = `
+    <div style="font-weight:600; font-size:14.5px; margin-bottom:8px;">${escapeHtml(nameFor(pid))} is in the <span style="color:var(--us);">${meta.name}</span> phase</div>
+    <div style="font-size:13.5px; color:var(--ink-soft); margin-bottom:10px;">${meta.desc}</div>
+    <div style="font-size:13px; color:var(--ink-soft);">Next period estimated around <strong style="color:var(--ink);">${nextD}</strong>.</div>
+    ${stats.lastSymptoms && stats.lastSymptoms.length ? `<div style="font-size:13px; color:var(--ink-soft); margin-top:6px;">Recently noted: ${stats.lastSymptoms.map(escapeHtml).join(', ')}</div>` : ''}
+    <div style="font-size:13px; color:var(--ink-soft); margin-top:10px; padding-top:10px; border-top:1px solid var(--line);">💡 ${getPartnerTip(stats.phase)}</div>
+  `;
+}
+
+async function loadChecklist(){
+  const { data, error } = await sb.from('checklist_items').select('*').eq('couple_id', coupleId).order('created_at', {ascending:true});
+  if(error){ console.error(error); checklistItems = []; return; }
+  checklistItems = data || [];
+}
+
+function renderChecklist(){
+  const box = document.getElementById('checklist');
+  if(!box) return;
+  box.innerHTML = checklistItems.map(item => `<div class="checklist-item">
+      <div class="box ${item.done?'done':''}" onclick="toggleCheck('${item.id}')">${item.done?'✓':''}</div>
+      <div class="txt ${item.done?'done':''}" style="flex:1;">${escapeHtml(item.label)}</div>
+      ${item.is_custom ? `<button onclick="removeChecklistItem('${item.id}')" style="background:none; color:var(--ink-soft); font-size:13px;">✕</button>` : ''}
+    </div>`).join('');
+}
+
+async function toggleCheck(id){
+  const item = checklistItems.find(c => c.id === id);
+  if(!item) return;
+  item.done = !item.done;
+  renderChecklist();
+  await sb.from('checklist_items').update({ done: item.done }).eq('id', id);
+}
+
+async function addChecklistItem(){
+  const input = document.getElementById('newChecklistItem');
+  const label = input.value.trim();
+  if(!label) return;
+  const customCount = checklistItems.filter(c => c.is_custom).length;
+  if(plan !== 'premium' && customCount >= 1){
+    openUpgrade();
+    showToast("Free plan allows 1 custom item");
+    return;
+  }
+  input.value = "";
+  const { error } = await sb.from('checklist_items').insert({ couple_id: coupleId, label, is_custom:true, created_by:userId });
+  if(error){ showToast("Couldn't add"); console.error(error); return; }
+  await loadChecklist();
+  renderChecklist();
+}
+
+async function removeChecklistItem(id){
+  await sb.from('checklist_items').delete().eq('id', id);
+  await loadChecklist();
+  renderChecklist();
+}
+
+function renderGestures(){
+  const box = document.getElementById('gestureRow');
+  box.innerHTML = GESTURES.map(g =>
+    `<button class="gesture-chip" onclick="sendGesture('${g.emoji}','${g.label}')">${g.emoji} ${g.label}</button>`
+  ).join('');
+}
+
+function renderLoveCategories(){
+  const box = document.getElementById('loveCategoryChips');
+  box.innerHTML = Object.keys(LOVE_MESSAGES).map(cat =>
+    `<div class="chip ${cat===loveCategory?'active':''}" onclick="selectLoveCategory('${cat}')">${cat}</div>`
+  ).join('');
+}
+function selectLoveCategory(cat){
+  loveCategory = cat;
+  renderLoveCategories();
+  renderLoveMessages();
+}
+function renderLoveMessages(){
+  const box = document.getElementById('loveMessageList');
+  const msgs = LOVE_MESSAGES[loveCategory];
+  const visible = plan === 'premium' ? msgs : msgs.slice(0,1);
+  let html = visible.map((m,i) => `
+    <div class="log-item">
+      <div class="d" style="font-weight:400; max-width:78%;">${escapeHtml(m)}</div>
+      <button onclick="sendLoveNote(${i})" style="color:var(--luteal);">Send</button>
+    </div>`).join('');
+  if(plan !== 'premium'){
+    html += `<div class="lock-box" style="margin-top:12px;">
+      <div class="lt">${msgs.length - 1} more in "${loveCategory}"</div>
+      <div class="ls">Unlock the full Love Notes library.</div>
+      <button class="btn-primary" style="width:auto; padding:9px 20px;" onclick="openUpgrade()">Unlock Premium</button>
+    </div>`;
+  }
+  box.innerHTML = html;
+}
+async function sendLoveNote(i){
+  const text = LOVE_MESSAGES[loveCategory][i];
+  await addNote(text, false);
+  showToast("Sent");
+}
+
+function renderAffirmation(phase){
+  const box = document.getElementById('affirmationCard');
+  if(!box) return;
+  const list = AFFIRMATIONS[phase] || AFFIRMATIONS.follicular;
+  const dayIndex = Math.floor(Date.now()/(1000*60*60*24)) % list.length;
+  box.innerHTML = `
+    <div style="font-size:11.5px; color:var(--ink-soft); margin-bottom:6px;">Today's affirmation</div>
+    <div style="font-family:'Fraunces', serif; font-size:16.5px; line-height:1.4;">${list[dayIndex]}</div>
+  `;
+}
+
+async function loadNotes(){
+  const { data, error } = await sb.from('notes').select('*').eq('couple_id', coupleId).order('created_at', {ascending:true});
+  if(error){ console.error(error); notes = []; return; }
+  notes = data || [];
+}
+
+function renderNotes(){
+  const box = document.getElementById('notesThread');
+  if(!box) return;
+  if(notes.length === 0){
+    box.innerHTML = `<div class="empty-state" style="padding:16px 0;">No notes yet — leave the first one.</div>`;
+    return;
+  }
+  box.innerHTML = notes.slice(-30).map(n => {
+    const mine = n.author_id === userId;
+    const time = new Date(n.created_at).toLocaleString(undefined,{month:'short', day:'numeric', hour:'numeric', minute:'2-digit'});
+    const reactions = n.reactions || {};
+    const reactionsHtml = `<div class="reactions">${REACTION_EMOJIS.map(e =>
+      `<button class="reaction-btn" onclick="reactToNote('${n.id}','${e}')">${e}${reactions[e] ? `<span class="count">${reactions[e]}</span>` : ''}</button>`
+    ).join('')}</div>`;
+    const body = n.is_gesture
+      ? `<div class="gesture-text">${escapeHtml(n.text)}</div>`
+      : `<div>${escapeHtml(n.text)}</div>`;
+    return `<div class="note ${mine?'mine':'theirs'} ${n.is_gesture?'gesture':''}">
+      <div class="author">${escapeHtml(nameFor(n.author_id))}</div>
+      ${body}
+      <div class="ts">${time}</div>
+      ${reactionsHtml}
+    </div>`;
+  }).join('');
+}
+
+async function addNote(text, isGesture){
+  const { error } = await sb.from('notes').insert({ couple_id: coupleId, author_id: userId, text, is_gesture: !!isGesture });
+  if(error){ console.error(error); showToast("Couldn't send"); return; }
+  await loadNotes();
+  renderNotes();
+}
+
+async function postNote(){
+  const input = document.getElementById('noteInput');
+  const text = input.value.trim();
+  if(!text) return;
+  input.value = "";
+  await addNote(text, false);
+}
+
+async function sendGesture(emoji, label){
+  await addNote(`${emoji} ${label}`, true);
+  showToast(`Sent ${label.toLowerCase()}`);
+}
+
+async function reactToNote(id, emoji){
+  const note = notes.find(n => n.id === id);
+  if(!note) return;
+  const reactions = Object.assign({}, note.reactions || {});
+  reactions[emoji] = (reactions[emoji] || 0) + 1;
+  note.reactions = reactions;
+  renderNotes();
+  await sb.from('notes').update({ reactions }).eq('id', id);
+}
+
+/* ================= NAV ================= */
+function switchView(name){
+  document.querySelectorAll('.view').forEach(v=> v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=> b.classList.toggle('active', b.dataset.view===name));
+  if(name === 'us') renderUs();
+  if(name === 'trends') renderTrends();
+}
+
+onAuthReady();
+</script>
+
+</body>
+</html>
