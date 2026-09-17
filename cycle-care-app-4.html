@@ -1,1 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Us — Cycle Care</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&display=swap');
 
+  :root{
+    --cream: #FAF6F1;
+    --card: #FFFFFF;
+    --ink: #2A1F26;
+    --ink-soft: #6B5C64;
+    --line: #E4D9CE;
+
+    --menstrual: #7A2E3E;
+    --menstrual-tint: #F3E2E4;
+    --follicular: #5E7A52;
+    --follicular-tint: #E9EFE2;
+    --ovulatory: #C98A3E;
+    --ovulatory-tint: #F6E8D3;
+    --luteal: #5F4C6B;
+    --luteal-tint: #EAE2ED;
+    --us: #A8663E;
+    --us-tint: #F3E5D8;
+
+    --lime: #6E8F2E;
+    --lime-dark: #56701F;
+    --lime-tint: #EAF1D9;
+    --lemon: #C99A1E;
+    --lemon-dark: #A67D16;
+    --lemon-tint: #FBF1D4;
+  }
+
+  *{ box-sizing: border-box; margin:0; padding:0; -webkit-tap-highlight-color: transparent; }
+  html,body{ height:100%; }
+
+  body{
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    line-height: 1.5;
+    padding-bottom: 160px;
+  }
+
+  .app{ max-width: 520px; margin: 0 auto; }
+
+  header.top{
+    padding: 22px 20px 16px;
+    display:flex; align-items:baseline; justify-content:space-between;
+  }
+  header.top .brand{
+    font-family:'Fraunces', serif; font-weight:500; font-size: 20px;
+  }
+  header.top .brand span{ color: var(--us); }
+  header.top .date{ font-size: 12.5px; color: var(--ink-soft); }
+
+  .view{ display:none; padding: 4px 20px 20px; animation: fadeIn .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fadeIn{ from{ opacity:0; transform: translateY(4px);} to{opacity:1; transform:none;} }
+
+  h1.page-title{
+    font-family:'Fraunces', serif; font-weight:500; font-size: 24px; margin-bottom: 4px;
+  }
+  .page-sub{ font-size: 14px; color: var(--ink-soft); margin-bottom: 20px; }
+
+  /* CARDS */
+  .card{
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 2px rgba(42,31,38,.04), 0 10px 24px rgba(42,31,38,.05);
+  }
+
+  .premium-badge{
+    font-size: 10px; font-weight: 600; letter-spacing: .02em;
+    background: linear-gradient(135deg, #E8B923, #C98A3E);
+    color: white; padding: 3px 9px; border-radius: 20px; margin-left: 9px;
+    cursor: pointer;
+  }
+  .premium-badge.locked{
+    background: var(--cream); color: var(--ink-soft); border: 1px solid var(--line);
+  }
+
+  .phase-hero{
+    border-radius: 10px;
+    padding: 24px 20px;
+    margin-bottom: 14px;
+    color: white;
+    box-shadow: 0 12px 28px rgba(42,31,38,.14);
+  }
+  .phase-hero .k{ font-size: 12.5px; opacity: .85; text-transform: none; }
+  .phase-hero .phase-name{ font-family:'Fraunces', serif; font-size: 30px; font-weight: 500; margin: 4px 0 10px; }
+  .phase-hero .phase-desc{ font-size: 14.5px; opacity: .92; max-width: 400px; }
+  .phase-hero.p-menstrual{ background: linear-gradient(135deg, var(--menstrual), #591F2C); }
+  .phase-hero.p-follicular{ background: linear-gradient(135deg, var(--follicular), #46613C); }
+  .phase-hero.p-ovulatory{ background: linear-gradient(135deg, var(--ovulatory), #A96E2A); }
+  .phase-hero.p-luteal{ background: linear-gradient(135deg, var(--luteal), #493B53); }
+  .phase-hero.p-empty{ background: linear-gradient(135deg, #8C7E86, #6B5C64); }
+
+  .stat-row{ display:flex; gap: 12px; margin-top: 14px; }
+  .stat{ flex:1; background: rgba(255,255,255,.14); border-radius: 8px; padding: 10px 12px; }
+  .stat .n{ font-family:'Fraunces', serif; font-size: 18px; }
+  .stat .l{ font-size: 11.5px; opacity: .85; }
+
+  .reliability{ font-size: 13.5px; color: var(--ink-soft); }
+
+  /* BUTTONS */
+  button{ font-family:'Inter', sans-serif; cursor:pointer; border:none; }
+  .btn-primary{
+    background: var(--ink); color:white; padding: 12px 18px; border-radius: 8px;
+    font-size: 14.5px; font-weight:500; width: 100%;
+  }
+  .btn-primary:hover{ opacity:.9; }
+  .btn-secondary{
+    background: transparent; color: var(--ink); border: 1px solid var(--line) !important;
+    padding: 11px 18px; border-radius: 8px; font-size: 14px; width:100%;
+  }
+  .btn-ghost{
+    background:none; color: var(--ink-soft); font-size: 13px; text-decoration: underline;
+    padding: 6px 0;
+  }
+  .btn-row{ display:flex; gap: 10px; margin-top: 10px; }
+
+  /* SYMPTOM CHIPS */
+  .chip-grid{ display:flex; flex-wrap:wrap; gap: 8px; margin: 12px 0 16px; }
+  .chip{
+    padding: 8px 14px; border-radius: 20px; border: 1px solid var(--line);
+    font-size: 13.5px; background: var(--cream); color: var(--ink-soft);
+  }
+  .chip.active{ background: var(--ink); color:white; border-color: var(--ink); }
+
+  input[type="date"], input[type="text"], input[type="email"], input[type="password"], textarea{
+    width:100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 8px;
+    font-family:'Inter', sans-serif; font-size: 15px; background: var(--cream); color: var(--ink);
+  }
+  label{ display:block; font-size: 12.5px; color: var(--ink-soft); margin-bottom: 6px; }
+  .field{ margin-bottom: 14px; }
+
+  /* LOG LIST */
+  .log-item{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 13px 0; border-top: 1px solid var(--line);
+  }
+  .log-item:first-child{ border-top:none; }
+  .log-item .d{ font-size: 14.5px; font-weight: 500; }
+  .log-item .meta{ font-size: 12.5px; color: var(--ink-soft); margin-top:2px; }
+  .log-item button{ background:none; color: var(--menstrual); font-size: 13px; }
+
+  .empty-state{
+    text-align:center; padding: 30px 16px; color: var(--ink-soft); font-size: 14px;
+  }
+
+  /* US TAB */
+  .share-toggle{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 14px 0;
+  }
+  .switch{
+    width: 44px; height: 26px; border-radius: 13px; background: var(--line);
+    position: relative; cursor:pointer; flex-shrink:0;
+  }
+  .switch.on{ background: var(--us); }
+  .switch .knob{
+    width: 20px; height: 20px; border-radius: 50%; background:white;
+    position:absolute; top:3px; left:3px; transition: left .18s ease;
+  }
+  .switch.on .knob{ left: 21px; }
+
+  .checklist-item{
+    display:flex; align-items:center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line);
+  }
+  .checklist-item:first-child{ border-top:none; }
+  .checklist-item .box{
+    width: 20px; height: 20px; border-radius: 5px; border: 1.5px solid var(--line);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; cursor:pointer;
+  }
+  .checklist-item .box.done{ background: var(--us); border-color: var(--us); color:white; font-size:13px; animation: pop .32s ease; }
+  .checklist-item .txt{ font-size: 14.5px; }
+  .checklist-item .txt.done{ color: var(--ink-soft); text-decoration: line-through; }
+
+  @keyframes pop{ 0%{ transform:scale(1); } 45%{ transform:scale(1.3); } 100%{ transform:scale(1); } }
+  @keyframes noteIn{ from{ opacity:0; transform: translateY(6px) scale(.97); } to{ opacity:1; transform:none; } }
+
+  .note{
+    padding: 12px 14px; border-radius: 10px; margin-bottom: 8px; font-size: 14px;
+    max-width: 85%; animation: noteIn .25s ease;
+  }
+  .note.mine{ background: var(--us-tint); margin-left:auto; }
+  .note.theirs{ background: var(--card); border:1px solid var(--line); }
+  .note.gesture{ background: linear-gradient(135deg, var(--lemon-tint), var(--lime-tint)); border: 1px solid var(--lime); }
+  .note.gesture .gesture-text{ font-size: 20px; margin-bottom: 2px; }
+  .note .author{ font-size: 11.5px; color: var(--ink-soft); margin-bottom:3px; font-weight:500; }
+  .note .ts{ font-size: 10.5px; color: var(--ink-soft); margin-top: 4px; opacity:.7; }
+
+  .reactions{ display:flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .reaction-btn{
+    background: rgba(255,255,255,.6); border: 1px solid var(--line); border-radius: 12px;
+    padding: 2px 8px; font-size: 12.5px; display:flex; align-items:center; gap:3px;
+    transition: transform .12s ease;
+  }
+  .reaction-btn:active{ transform: scale(1.2); }
+  .reaction-btn .count{ color: var(--ink-soft); font-size: 11px; }
+
+  .gesture-row{ display:flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .gesture-chip{
+    background: var(--cream); border: 1px solid var(--line); border-radius: 20px;
+    padding: 7px 12px; font-size: 13px; display:flex; align-items:center; gap: 5px;
+    transition: transform .12s ease, background .15s ease;
+  }
+  .gesture-chip:active{ transform: scale(.94); background: var(--lime-tint); border-color: var(--lime); }
+
+  .note-compose{ display:flex; gap: 8px; margin-top: 12px; }
+  .note-compose input{ flex:1; }
+  .note-compose button{
+    background: var(--us); color:white; border-radius: 8px; padding: 0 16px; font-size: 14px; font-weight:500;
+  }
+
+  .quick-tips{ display:flex; flex-direction:column; gap:0; }
+  .quick-tips .qt{ padding: 12px 0; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--ink-soft); }
+  .quick-tips .qt:first-child{ border-top:none; }
+  .quick-tips .qt strong{ color: var(--ink); }
+
+  /* LEARN TAB */
+  .phase-ref{
+    border-radius: 8px; padding: 16px 18px; margin-bottom: 10px; border-left: 4px solid;
+  }
+  .phase-ref .name{ font-family:'Fraunces', serif; font-size: 17px; font-weight:500; }
+  .phase-ref .days{ font-size: 12px; color: var(--ink-soft); margin-bottom: 4px; }
+  .phase-ref .desc{ font-size: 13.5px; color: var(--ink-soft); margin-top: 4px; }
+  .phase-ref.r-menstrual{ background: var(--menstrual-tint); border-color: var(--menstrual); }
+  .phase-ref.r-follicular{ background: var(--follicular-tint); border-color: var(--follicular); }
+  .phase-ref.r-ovulatory{ background: var(--ovulatory-tint); border-color: var(--ovulatory); }
+  .phase-ref.r-luteal{ background: var(--luteal-tint); border-color: var(--luteal); }
+
+  .avoid-box{ background: var(--menstrual-tint); border-radius: 8px; padding: 16px 18px; margin-top: 16px; }
+  .avoid-box .g-title{ font-family:'Fraunces', serif; font-weight:500; font-size:15px; color: var(--menstrual); margin-bottom: 8px; }
+  .avoid-box li{ font-size: 13.5px; color: var(--ink-soft); padding-left: 14px; position:relative; margin-bottom:6px; }
+  .avoid-box li::before{ content:""; position:absolute; left:0; top:7px; width:5px; height:5px; border-radius:50%; background: var(--menstrual); }
+
+  .citrus-panel{ border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; }
+  .citrus-panel:last-child{ margin-bottom: 0; }
+  .citrus-panel.lime{ background: var(--lime-tint); border-left: 4px solid var(--lime); }
+  .citrus-panel.lemon{ background: var(--lemon-tint); border-left: 4px solid var(--lemon); }
+  .citrus-label{ font-family:'Fraunces', serif; font-weight:500; font-size: 15px; margin-bottom: 8px; }
+  .citrus-panel.lime .citrus-label{ color: var(--lime); }
+  .citrus-panel.lemon .citrus-label{ color: var(--lemon); }
+  .citrus-panel li{ font-size: 13.5px; color: var(--ink-soft); padding-left: 14px; position:relative; margin-bottom: 6px; list-style:none; }
+  .citrus-panel li:last-child{ margin-bottom: 0; }
+  .citrus-panel li::before{ content:""; position:absolute; left:0; top:7px; width:5px; height:5px; border-radius:50%; }
+  .citrus-panel.lime li::before{ background: var(--lime); }
+  .citrus-panel.lemon li::before{ background: var(--lemon); }
+
+  .disclaimer{ font-size: 12px; color: var(--ink-soft); margin-top: 18px; line-height: 1.6; }
+
+  /* NAV */
+  nav.bottom{
+    position: fixed; bottom:0; left:0; right:0;
+    background: var(--card); border-top: 1px solid var(--line);
+    display:flex; max-width: 520px; margin: 0 auto;
+  }
+  nav.bottom button{
+    flex:1; background:none; padding: 12px 4px 10px; display:flex; flex-direction:column;
+    align-items:center; gap: 3px; color: var(--ink-soft); font-size: 11px;
+  }
+  nav.bottom button .dot{ width:6px; height:6px; border-radius:50%; background:transparent; margin-bottom:1px; }
+  nav.bottom button.active{ color: var(--ink); font-weight:600; }
+  nav.bottom button[data-view="today"].active .dot{ background: var(--us); }
+  nav.bottom button[data-view="log"].active .dot{ background: var(--follicular); }
+  nav.bottom button[data-view="trends"].active .dot{ background: var(--lemon); }
+  nav.bottom button[data-view="us"].active .dot{ background: var(--luteal); }
+  nav.bottom button[data-view="learn"].active .dot{ background: var(--lime); }
+
+  .loading{ text-align:center; padding: 40px 20px; color: var(--ink-soft); font-size: 14px; }
+  .name-gate{ padding: 16px 0; }
+  .toast{
+    position: fixed; bottom: 96px; left: 50%; transform: translateX(-50%);
+    background: var(--ink); color:white; padding: 10px 18px; border-radius: 20px;
+    font-size: 13px; opacity:0; pointer-events:none; transition: opacity .25s ease;
+    max-width: 90%; text-align:center; z-index: 90;
+  }
+  .toast.show{ opacity:1; }
+
+  .lock-box{
+    text-align:center; padding: 26px 16px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--lemon-tint), var(--lime-tint));
+    border: 1px dashed var(--lime-dark);
+  }
+  .lock-box .lt{ font-size: 14.5px; font-weight: 600; margin-bottom: 5px; }
+  .lock-box .ls{ font-size: 13px; color: var(--ink-soft); margin-bottom: 14px; }
+
+  .modal-overlay{
+    position: fixed; inset: 0; background: rgba(42,31,38,.55);
+    display: none; align-items: flex-end; justify-content: center; z-index: 60;
+  }
+  .modal-overlay.show{ display: flex; }
+  .modal-card{
+    background: var(--cream); width: 100%; max-width: 520px; border-radius: 20px 20px 0 0;
+    padding: 26px 22px 30px; position: relative; animation: slideUp .25s ease;
+  }
+  @keyframes slideUp{ from{ transform: translateY(24px); opacity:.6; } to{ transform:none; opacity:1; } }
+  .modal-close{ position:absolute; top:16px; right:18px; color: var(--ink-soft); font-size:16px; }
+  .modal-eyebrow{ font-size:12px; color: var(--us); font-weight:600; margin-bottom:4px; }
+  .modal-title{ font-family:'Fraunces', serif; font-size:24px; font-weight:500; margin-bottom:16px; }
+  .modal-features{ display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+  .mf{ font-size:14px; color: var(--ink-soft); }
+  .plan-options{ display:flex; gap:10px; margin-bottom:14px; }
+  .plan-btn{
+    flex:1; background: var(--card); border: 1.5px solid var(--line); border-radius:12px;
+    padding: 16px 12px; text-align:left; position:relative;
+  }
+  .plan-btn.featured{ border-color: var(--us); background: var(--us-tint); }
+  .p-badge{
+    position:absolute; top:-10px; right:10px; background: var(--us); color:white;
+    font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;
+  }
+  .p-name{ font-size:12.5px; color: var(--ink-soft); margin-bottom:4px; }
+  .p-price{ font-family:'Fraunces', serif; font-size:22px; }
+  .p-price span{ font-size:13px; color: var(--ink-soft); font-family:'Inter',sans-serif; }
+  .p-sub{ font-size:11px; color: var(--ink-soft); margin-top:4px; }
+  .modal-fine{ font-size:11px; color: var(--ink-soft); text-align:center; }
+
+  /* AUTH SCREEN */
+  .auth-screen{
+    position: fixed; inset:0; background: var(--cream); z-index: 100;
+    display: flex; align-items:center; justify-content:center; padding: 20px;
+  }
+  .auth-card{
+    background: var(--card); border:1px solid var(--line); border-radius:14px;
+    padding: 30px 24px; width:100%; max-width: 380px;
+    box-shadow: 0 12px 28px rgba(42,31,38,.1);
+  }
+  .auth-brand{ font-family:'Fraunces', serif; font-weight:500; font-size: 26px; margin-bottom:4px; }
+  .auth-brand span{ color: var(--us); }
+  .auth-sub{ font-size:13.5px; color: var(--ink-soft); margin-bottom:22px; }
+  .auth-error{ font-size:13px; margin-bottom:12px; display:none; }
+
+  /* PAIR GATE */
+  .invite-code-box{
+    display:none; text-align:center; margin:16px 0; padding: 14px;
+    background: var(--cream); border: 1px dashed var(--line); border-radius: 10px;
+    font-family:'Fraunces', serif; font-size:26px; letter-spacing:3px; color: var(--us);
+  }
+  .or-divider{ text-align:center; font-size:12px; color: var(--ink-soft); margin:16px 0; }
+</style>
+</head>
+<body>
+
+<div class="app" id="mainApp" style="display:none;">
+  <header class="top">
+    <div style="display:flex; align-items:center;">
+      <div class="brand">cycle<span>care</span></div>
+      <div class="premium-badge locked" id="planBadge" onclick="openUpgrade()">Upgrade</div>
+    </div>
+    <div class="date" id="todayLabel"></div>
+  </header>
+
+  <!-- TODAY -->
+  <div class="view active" id="view-today">
+    <div id="todayContent" class="loading">Loading your data…</div>
+  </div>
+
+  <!-- LOG -->
+  <div class="view" id="view-log">
+    <h1 class="page-title">Cycle log</h1>
+    <p class="page-sub">The more you log, the more reliable the predictions get.</p>
+
+    <div class="card">
+      <div class="field">
+        <label for="newDate">First day of period</label>
+        <input type="date" id="newDate">
+      </div>
+      <div class="field">
+        <label>How did it start? (optional)</label>
+        <div class="chip-grid" id="symptomChips"></div>
+      </div>
+      <button class="btn-primary" onclick="addPeriod()">Log this period</button>
+    </div>
+
+    <div class="card">
+      <div class="page-sub" style="margin-bottom:8px; font-weight:600; color:var(--ink);">History</div>
+      <div id="logList"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="exportData()">Export my data</button>
+    </div>
+    <button class="btn-ghost" onclick="clearData()">Clear all my data</button>
+  </div>
+
+  <!-- US -->
+  <div class="view" id="view-us">
+    <h1 class="page-title">Us</h1>
+    <p class="page-sub">A shared space for you and your partner. Use it to stay in sync, not to overshare.</p>
+
+    <div id="pairGate" class="card name-gate" style="display:none;">
+      <div style="font-weight:600; font-size:15px; margin-bottom:6px;">Connect with your partner</div>
+      <div style="font-size:13px; color:var(--ink-soft); margin-bottom:14px;">Create a code and share it with your partner, or enter the code they gave you.</div>
+      <button class="btn-primary" onclick="createCouple()">Create a new code</button>
+      <div id="inviteCodeDisplay" class="invite-code-box"></div>
+      <div class="or-divider">— or —</div>
+      <div class="field">
+        <label for="joinCodeInput">Enter partner's code</label>
+        <input type="text" id="joinCodeInput" placeholder="e.g. a1b2c3d4">
+      </div>
+      <button class="btn-secondary" onclick="joinCouple()">Join with code</button>
+    </div>
+
+    <div id="usContent" style="display:none;">
+      <div class="card">
+        <div class="share-toggle">
+          <div>
+            <div style="font-weight:600; font-size:14.5px;">Share my status</div>
+            <div style="font-size:12.5px; color:var(--ink-soft); margin-top:2px;">Lets your partner see your current phase & predicted date here.</div>
+          </div>
+          <div class="switch" id="shareSwitch" onclick="toggleShare()"><div class="knob"></div></div>
+        </div>
+      </div>
+
+      <div class="card" id="partnerStatusCard"></div>
+
+      <div class="card">
+        <div style="font-weight:600; font-size:14.5px; margin-bottom:4px;">Support checklist</div>
+        <div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:6px;">Either of you can check these off — a shared list, not a chore chart.</div>
+        <div id="checklist"></div>
+        <div class="note-compose" style="margin-top:14px;">
+          <input type="text" id="newChecklistItem" placeholder="Add your own item…">
+          <button onclick="addChecklistItem()">Add</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-weight:600; font-size:14.5px; margin-bottom:4px;">Act & React</div>
+        <div style="font-size:12.5px; color:var(--ink-soft); margin-bottom:14px;">Lime is what to do before she has to ask. Lemon is how to respond in the moment.</div>
+
+        <div class="citrus-panel lime">
+          <div class="citrus-label">Lime — Act</div>
+          <ul>
+            <li>Stock supplies before she runs low.</li>
+   
