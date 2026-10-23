@@ -393,7 +393,9 @@
   .dev-test-banner .dev-copy{flex:1}
   .dev-test-banner strong{display:block;font-size:12px;margin-bottom:2px}
   .dev-test-banner button{border:1px solid rgba(255,255,255,.35);background:transparent;color:#fff;border-radius:9px;padding:7px 9px;font:600 11px Inter,sans-serif;cursor:pointer}
-  .dev-test-banner button:active{transform:scale(.98)}
+  .dev-test-banner button:active{transform:scale(.98)}   .pw-wrap{ position:relative; display:block; }
+  .pw-wrap input{ padding-right:46px !important; }
+  .pw-eye{ position:absolute; right:6px; top:50%; transform:translateY(-50%); background:none; border:0; padding:8px; font-size:18px; line-height:1; cursor:pointer; color:var(--ink-soft); }
 </style>
 </head>
 <body>
@@ -2152,7 +2154,29 @@ if(recoveryMode){
       eb.style.display = 'block';
     }
   });
-}
+} // Show/hide password eye icon on every password box
+(function(){
+  function addEye(inp){
+    if(inp.dataset.eye) return;
+    inp.dataset.eye = '1';
+    const wrap = document.createElement('div');
+    wrap.className = 'pw-wrap';
+    inp.parentNode.insertBefore(wrap, inp);
+    wrap.appendChild(inp);
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pw-eye';
+    b.textContent = '👁️';
+    b.setAttribute('aria-label', 'Show or hide password');
+    b.onclick = function(){
+      const show = inp.type === 'password';
+      inp.type = show ? 'text' : 'password';
+      b.textContent = show ? '🙈' : '👁️';
+    };
+    wrap.appendChild(b);
+  }
+  document.querySelectorAll('input[type="password"]').forEach(addEye);
+})();
 </script>
 
 </body>
